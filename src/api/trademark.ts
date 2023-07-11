@@ -3,7 +3,8 @@ import requset from '@/utils/request'
 enum URLS{
     LIST='/product/baseTrademark',
     DELETEITEM='product/baseTrademark/remove',
-    ADD='/product/baseTrademark/save'
+    ADD='/product/baseTrademark/save',
+    EDIT='/product/baseTrademark/update'
 }
 
 // 品牌的数据类型
@@ -23,10 +24,10 @@ export interface trademarkListType{
 }
 
 // 添加品牌类型
-export interface addTrademarkItemType{
-    tmName:string,
-    logoUrl:string
-}
+export type addTrademarkItemType = Omit<trademarkDataType,'id'>
+
+// 编辑类型
+export type editTrademarkItemType = trademarkDataType
 
 // 1.请求品牌列表
 export const reqTrademarkList = (page:number,limit:number)=>{
@@ -41,4 +42,9 @@ export const reqDeleteTrademarkItem = (id:string)=>{
 // 3.请求添加品牌
 export const reqAddTrademarkItem = (data:addTrademarkItemType)=>{
     return requset.post<any,null>(URLS.ADD,data)
+}
+
+// 4.编辑品牌
+export const reqCancelTrademarkItem = (data:editTrademarkItemType)=>{
+    return requset.put<any,null>(URLS.EDIT,data)
 }

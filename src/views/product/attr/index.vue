@@ -1,5 +1,13 @@
 <template>
-  <div>ProductAttrList</div>
+  <div>
+    <el-card>
+      <el-form>
+        <el-form-item label="一级分类"></el-form-item>
+        <el-form-item label="二级分类"></el-form-item>
+        <el-form-item label="三级分类"></el-form-item>
+      </el-form>
+    </el-card>
+  </div>
 </template>
 
 <script lang="ts">

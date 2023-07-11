@@ -2,7 +2,7 @@
   <div>
     <el-card shadow="hover">
       <template #header>
-        <el-button type="primary" icon="ele-Plus" @click="ShowDialog">添加</el-button>
+        <el-button type="primary" icon="ele-Plus" @click="ShowDialog()">添加</el-button>
       </template>
       <el-table :data="trademarkList">
         <el-table-column label="序号" type="index" width="100"></el-table-column>
@@ -14,7 +14,7 @@
         </el-table-column>
         <el-table-column label="操作">
           <template #="{ row, column, $index }">
-            <el-button type="warning" icon="ele-Edit">修改</el-button>
+            <el-button type="warning" icon="ele-Edit" @click="ShowDialog(row)">修改</el-button>
             <el-button type="danger" icon="ele-Delete" @click="deleteUser(row.id)">删除</el-button>
           </template>
         </el-table-column>
@@ -24,7 +24,7 @@
         :current-page="page" layout="prev, pager, next, jumper,sizes, ->, total" @size-change="sizeChange"
         style="margin-top: 20px;"></el-pagination>
     </el-card>
-    <el-dialog v-model="isShowDialog" title="添加品牌" modal show-close>
+    <el-dialog v-model="isShowDialog" :title="DialogTitle + '品牌'" modal show-close>
       <template #>
         <el-form label-width="100px" :model="addTrademarkItem" :rules="rules" ref="formRef">
           <el-form-item label="品牌名称" prop="tmName">
@@ -32,7 +32,7 @@
           </el-form-item>
           <el-form-item label="品牌LOGO" prop="logoUrl">
             <el-upload class="avatar-uploader" :action="uploadUrl" :show-file-list="false"
-              :on-success="addTrademarkLogoUrl">
+              :on-success="addTrademarkLogoUrl" :before-upload="beforeUpload">
               <img v-if="addTrademarkItem.logoUrl" :src="addTrademarkItem.logoUrl" class="avatar" />
               <el-icon v-else class="avatar-uploader-icon">
                 <ele-Plus />
@@ -56,10 +56,10 @@ export default defineComponent({
 })
 </script>
 <script lang="ts" setup>
-import { ref } from 'vue'
-import { reqTrademarkList, reqDeleteTrademarkItem, reqAddTrademarkItem } from '@/api/trademark'
-import type { trademarkDataType, addTrademarkItemType } from '@/api/trademark'
-import type { UploadFile, UploadFiles, FormRules } from 'element-plus'
+import { nextTick, ref } from 'vue'
+import { reqTrademarkList, reqDeleteTrademarkItem, reqAddTrademarkItem, reqCancelTrademarkItem } from '@/api/trademark'
+import type { trademarkDataType, addTrademarkItemType, editTrademarkItemType } from '@/api/trademark'
+import type { UploadFile, UploadFiles, FormRules, UploadRawFile } from 'element-plus'
 import { ElMessage } from 'element-plus'
 // 品牌内容
 const trademarkList = ref<trademarkDataType[]>([])
@@ -72,7 +72,7 @@ const limit = ref(5)
 // 是否显示对话框的变量
 const isShowDialog = ref(false)
 // 添加品牌的内容
-const addTrademarkItem = ref<addTrademarkItemType>({
+const addTrademarkItem = ref<addTrademarkItemType | editTrademarkItemType>({
   tmName: '',
   logoUrl: ''
 })
@@ -80,6 +80,7 @@ const addTrademarkItem = ref<addTrademarkItemType>({
 const uploadUrl = `${import.meta.env.VITE_API_URL}/product/upload`
 // 绑定表单
 const formRef = ref()
+const DialogTitle = ref('')
 
 
 // 表单验证规则
@@ -93,13 +94,17 @@ const rules: FormRules = {
       // 最大个数
       max: 20,
       // 校验错误提示
-      message: '品牌名称必须填写'
+      message: '品牌名称必须填写',
+      // 触发时机
+      trigger: 'blur'
     }
   ],
   logoUrl: [
     {
       // 必填
       required: true,
+      // 触发时机
+      trigger: 'blur',
       // 自定义校验规则回调函数,rule为规则,value是当前的值,callbakc为回调函数,当里面有值的时候为失败,没有值为成功
       validator(rule: any, value: string, callback) {
         // 当没有图片地址的时候
@@ -125,8 +130,6 @@ const rules: FormRules = {
 async function getTrademark() {
   try {
     const result = await reqTrademarkList(page.value, limit.value)
-    // console.log(result);
-
     trademarkList.value = result.records
     total.value = result.total
     page.value = result.current
@@ -157,24 +160,48 @@ async function deleteUser(id: string) {
     getTrademark()
 }
 
-// 是否显示对话框
-function ShowDialog() {
+// 是否显示对话框或者编辑
+function ShowDialog(data?: trademarkDataType) {
   isShowDialog.value = true
+  if (data) {
+    addTrademarkItem.value = { ...data }
+    DialogTitle.value = '修改'
+  } else {
+    addTrademarkItem.value = {
+      tmName: '',
+      logoUrl: ''
+    },
+    DialogTitle.value = '添加'
+  }
+
+  nextTick(() => {
+    formRef.value?.clearValidate()
+  })
 }
 
 // 添加品牌
 async function addTrademark() {
 
   try {
-      // 调用 formRef.value.validate() 方法来对这个表单中指定的数据（model、rules）进行校验
+    // 调用 formRef.value.validate() 方法来对这个表单中指定的数据（model、rules）进行校验
     await formRef.value.validate()
-    await reqAddTrademarkItem(addTrademarkItem.value)
-    isShowDialog.value = false
-    page.value = Math.ceil((total.value + 1) / limit.value)
-    getTrademark()
-    ElMessage.success('添加成功')
+    // 编辑
+    if ((addTrademarkItem.value as editTrademarkItemType).id) {
+      await reqCancelTrademarkItem(addTrademarkItem.value as editTrademarkItemType)
+      isShowDialog.value = false
+      getTrademark()
+      ElMessage.success('修改成功')
+    } else {
+      // 添加
+      await reqAddTrademarkItem(addTrademarkItem.value)
+      isShowDialog.value = false
+      page.value = Math.ceil((total.value + 1) / limit.value)
+      getTrademark()
+      ElMessage.success('添加成功')
+    }
+
   } catch (e) {
-    ElMessage.error('添加失败')
+      ElMessage.success(`${DialogTitle}失败`)
   }
 
 }
@@ -182,6 +209,16 @@ async function addTrademark() {
 // 对话框的取消按钮
 function closeAdd() {
   isShowDialog.value = false
+}
+
+// 上传图片前的回调
+function beforeUpload(rawFile: UploadRawFile) {
+  if (["image/png", "image/jpg", "image/gif", 'image/jpeg'].includes(rawFile.type)) {
+
+    return true;
+  } else {
+    return false
+  }
 }
 
 // 品牌图片缩略图
@@ -194,6 +231,8 @@ function addTrademarkLogoUrl(response: { code: number, data: string }, uploadFil
   }
 
 }
+
+
 
 
 </script>

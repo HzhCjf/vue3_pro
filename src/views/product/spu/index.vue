@@ -1,5 +1,7 @@
 <template>
-  <div>SPU管理</div>
+  <div>
+    <categorySelector></categorySelector>
+  </div>
 </template>
 
 <script lang="ts">
@@ -9,7 +11,7 @@
   })
 </script>
 <script lang="ts" setup>
-  
+import categorySelector from '@/components/categorySelector'
 </script>
 
 <style lang="less" scoped>

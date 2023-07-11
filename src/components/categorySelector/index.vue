@@ -3,11 +3,13 @@
     <el-card>
       <el-form inline>
         <el-form-item label="一级分类">
+          <!-- 当一级分类改变时请求二级分类 -->
           <el-select v-model="category1Id" @change="getCategory2">
             <el-option v-for="cat1 in category1" :key="cat1.id" :label="cat1.name" :value="cat1.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="二级分类">
+          <!-- 当二级分类改变时请求三级分类 -->
           <el-select v-model="category2Id" @change="getCategory3">
             <el-option v-for="cat2 in category2" :key="cat2.id" :label="cat2.name" :value="cat2.id"></el-option>
           </el-select>

@@ -30,15 +30,25 @@ export default defineComponent({
 })
 </script>
 <script lang="ts" setup>
+//三级联动分类列表
 import categorySelector from '@/components/categorySelector/index.vue'
-import { ref } from 'vue'
+import { ref ,watch} from 'vue'
+// 请求的属性列表的接口
 import { reqAttrInfoList } from '@/api/attrInfoList'
-import type { attrInfoListType, attrValue } from '@/api/attrInfoList'
-import { watch } from 'vue'
+// 属性列表的类型
+import type { attrInfoListType } from '@/api/attrInfoList'
+// 自定义hooks
 import usecategorySelector from '@/hooks/usecategorySelector'
+
+
+// 分类id
 const { category1Id, category2Id, category3Id } = usecategorySelector()
+// 存储属性列表
 const attrs = ref<attrInfoListType[]>([])
+
+// 监听三级分类的id
 watch(category3Id, async () => {
+  // 当三级分类的id的值不为空字符串的时候调用函数
   if (category3Id.value !== '') {
     try {
       attrs.value = await reqAttrInfoList(Number(category1Id.value), Number(category2Id.value), Number(category3Id.value))

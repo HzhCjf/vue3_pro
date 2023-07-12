@@ -1,10 +1,11 @@
 import requst from '@/utils/request'
 
 enum URLS {
-    ATTR_INFO_LIST='/product/attrInfoList'
+    ATTR_INFO_LIST='/product/attrInfoList',
+    ADDATTRINFO='/product/saveAttrInfo'
 }
 
-// 属性
+// 请求属性类型
 export interface attrInfoListType{
     // 属性id
     id:number,
@@ -18,7 +19,7 @@ export interface attrInfoListType{
     attrValueList:attrValue[]
 }
 
-// 属性值
+// 请求属性值类型
 export interface attrValue{
     // 属性值id
     id:number,
@@ -28,6 +29,18 @@ export interface attrValue{
     attrId:number
 }
 
+
+// 添加属性的类型
+export type addAttrInfoType = Omit<attrInfoListType,'id'|'attrValueList'> & {
+    attrValueList:Pick<attrValue,'valueName'>[]
+}
+
+// 请求属性
 export function reqAttrInfoList(category1Id:number,category2Id:number,category3Id:number){
     return requst.get<any,attrInfoListType[]>(`${URLS.ATTR_INFO_LIST}/${category1Id}/${category2Id}/${category3Id}`)
+}
+
+// 请求添加属性
+export function reqAddAttrInfo(data:addAttrInfoType){
+    return requst.post<any,addAttrInfoType>(URLS.ADDATTRINFO,data)
 }

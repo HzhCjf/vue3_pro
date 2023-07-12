@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-card>
-      <el-form inline>
+      <el-form inline :disabled="disabled">
         <el-form-item label="一级分类">
           <!-- 当一级分类改变时请求二级分类 -->
           <el-select v-model="category1Id" @change="getCategory2">
@@ -50,6 +50,15 @@ const {
 
 // 初始化就请求分类列表1
 onMounted(getCategory1)
+
+withDefaults(
+  defineProps<{
+    disabled:boolean
+  }>(),
+  {
+    disabled:false
+  }
+)
 
 </script>
 

@@ -23,7 +23,7 @@
                   <el-button type="danger" icon="ele-Delete"></el-button>
                 </template>
               </el-popconfirm>
-              
+
             </template>
           </el-table-column>
         </el-table>
@@ -119,7 +119,7 @@ async function getAttrInfoList() {
       attrs.value = await reqAttrInfoList(Number(category1Id.value), Number(category2Id.value), Number(category3Id.value))
 
     } catch (e) {
-      
+
       console.log(e);
 
     }
@@ -157,6 +157,10 @@ function AddAttr(row?: attrInfoListType) {
 
 // 给指定的属性添加属性值
 function addAttrValue() {
+  //先判断addAttrInfoData.value.attrValueList里面的valueName 是不是空串  如果是直接retrun
+  let isEixt = addAttrInfoData.value.attrValueList.find((item) => item.valueName == "")
+  if (isEixt) return
+
   //给属性值的数组里面添加一个valueName属性
   addAttrInfoData.value.attrValueList.push({
     valueName: '',
@@ -187,7 +191,7 @@ function removeDoubel(row: addAttrValueEditType, index: number) {
   //   })
   //   ElMessage.error('请输入属性值')
   // }
-  
+
   // 如果这个属性值不存在或者为空,那就直接删除这个属性值
   if (!row.valueName || !row.valueName.trim()) {
     addAttrInfoData.value.attrValueList.splice(index, 1)

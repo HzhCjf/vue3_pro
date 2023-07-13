@@ -18,7 +18,12 @@
           <el-table-column label="操作" align="center" width="200px">
             <template #="{ row }">
               <el-button type="warning" icon="ele-Edit" style="margin-right: 10px;" @click="AddAttr(row)"></el-button>
-              <el-button type="danger" icon="ele-Delete" @click="deleteAttr(row.id)"></el-button>
+              <el-popconfirm title="你确定要删除?" @confirm="deleteAttr(row.id)">
+                <template #reference>
+                  <el-button type="danger" icon="ele-Delete"></el-button>
+                </template>
+              </el-popconfirm>
+              
             </template>
           </el-table-column>
         </el-table>

@@ -143,6 +143,10 @@ function AddAttr(row?: attrInfoListType) {
   if (row) {
     // 把这个属性的数据进行深拷贝到addAttrInfoData里面
     addAttrInfoData.value = _.cloneDeep(row)
+    // 点击修改的时候,把input销毁,span显示
+    addAttrInfoData.value.attrValueList.forEach((item) => {
+      item.isEdit = true
+    })
   } else {
     // 没有row,说明点击的是添加,把数据进行初始化
     addAttrInfoData.value = {

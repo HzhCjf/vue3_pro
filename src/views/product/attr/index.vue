@@ -1,6 +1,6 @@
 <template>
   <div>
-    <categorySelector :disabled="!isShowViewAttr"></categorySelector>
+    <CategorySelector :disabled="!isShowViewAttr"></CategorySelector>
     <el-card shadow="hover">
       <div v-if="isShowViewAttr">
         <el-button type="primary" icon="ele-Plus" style="margin-top: 20px;margin-bottom: 20px;" :disabled="isAddDisabled"
@@ -79,7 +79,7 @@ export default defineComponent({
 <script lang="ts" setup>
 import _ from 'lodash'
 //三级联动分类列表
-import categorySelector from '@/components/categorySelector/index.vue'
+import CategorySelector from '@/components/categorySelector/index.vue'
 import { ref, watch, nextTick } from 'vue'
 // 请求的属性列表的接口
 import { reqAttrInfoList, reqAddAttrInfo, reqDeleteAttr } from '@/api/attrInfoList'

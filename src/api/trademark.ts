@@ -4,7 +4,8 @@ enum URLS{
     LIST='/product/baseTrademark',
     DELETEITEM='product/baseTrademark/remove',
     ADD='/product/baseTrademark/save',
-    EDIT='/product/baseTrademark/update'
+    EDIT='/product/baseTrademark/update',
+    LIST2='/product/baseTrademark/getTrademarkList'
 }
 
 // 品牌的数据类型
@@ -47,4 +48,10 @@ export const reqAddTrademarkItem = (data:addTrademarkItemType)=>{
 // 4.编辑品牌
 export const reqCancelTrademarkItem = (data:editTrademarkItemType)=>{
     return requset.put<any,null>(URLS.EDIT,data)
+}
+
+
+// 5.请求品牌列表
+export const reqTrademarkList2 = ()=>{
+    return requset.get<any,trademarkDataType[]>(`${URLS.LIST2}`)
 }

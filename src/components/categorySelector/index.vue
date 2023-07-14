@@ -27,7 +27,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 export default defineComponent({
-  name: 'categorySelector'
+  name: 'CategorySelector'
 })
 </script>
 <script lang="ts" setup>
@@ -53,7 +53,7 @@ onMounted(getCategory1)
 
 withDefaults(
   defineProps<{
-    disabled:boolean
+    disabled?:boolean
   }>(),
   {
     disabled:false

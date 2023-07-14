@@ -1,5 +1,4 @@
 import requst from '@/utils/request'
-import type { type } from 'os'
 
 enum URLS {
     ATTR_INFO_LIST='/product/attrInfoList',

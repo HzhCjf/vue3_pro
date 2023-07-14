@@ -20,8 +20,8 @@
         </el-table-column>
       </el-table>
 
-      <el-pagination :total='total' @current-change="currentChangeHandler" :page-size="limit" :page-sizes="[5, 10, 15]"
-        :current-page="page" layout="prev, pager, next, jumper,sizes, ->, total" @size-change="sizeChange"
+      <el-pagination :total='total' @current-change="pageChangeHandler" :page-size="limit" :page-sizes="[5, 10, 15]"
+        :current-page="page" layout="prev, pager, next, jumper,sizes, ->, total" @size-change="limitChangeHandler"
         style="margin-top: 20px;"></el-pagination>
     </el-card>
     <el-dialog v-model="isShowDialog" :title="DialogTitle + '品牌'" modal show-close>
@@ -61,14 +61,16 @@ import { reqTrademarkList, reqDeleteTrademarkItem, reqAddTrademarkItem, reqCance
 import type { trademarkDataType, addTrademarkItemType, editTrademarkItemType } from '@/api/trademark'
 import type { UploadFile, UploadFiles, FormRules, UploadRawFile } from 'element-plus'
 import { ElMessage } from 'element-plus'
+import usePagination from '@/hooks/usePagination'
+const {page,limit,total,pageChangeHandler,limitChangeHandler}  = usePagination(getTrademark)
 // 品牌内容
 const trademarkList = ref<trademarkDataType[]>([])
 // 总条数
-const total = ref(0)
-// 当前页
-const page = ref(1)
-// 每页条数
-const limit = ref(5)
+// const total = ref(0)
+// // 当前页
+// const page = ref(1)
+// // 每页条数
+// const limit = ref(5)
 // 是否显示对话框的变量
 const isShowDialog = ref(false)
 // 添加品牌的内容
@@ -143,16 +145,16 @@ async function getTrademark() {
 getTrademark()
 
 // 在当前页改变的时候重新请求列表数据
-function currentChangeHandler(value: number) {
-  page.value = value
-  getTrademark()
-}
+// function currentChangeHandler(value: number) {
+//   page.value = value
+//   getTrademark()
+// }
 
-// 当每页条数改变时重新请求
-function sizeChange(value: number) {
-  limit.value = value
-  getTrademark()
-}
+// // 当每页条数改变时重新请求
+// function sizeChange(value: number) {
+//   limit.value = value
+//   getTrademark()
+// }
 
 // 删除单个品牌
 async function deleteUser(id: string) {

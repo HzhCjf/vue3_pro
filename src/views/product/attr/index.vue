@@ -134,7 +134,7 @@ async function getAttrInfoList() {
 watch(category3Id, () => {
   // 当三级分类的id的值不为空字符串的时候调用函数
   getAttrInfoList()
-})
+},{immediate:true})
 
 // 添加属性/修改属性
 function AddAttr(row?: attrInfoListType) {

@@ -3,7 +3,7 @@
     <el-button type="primary" icon="ele-Plus" style="margin: 20px 0;" @click="$emit('addSPUOrSKU', VIEWFORM.SPUFORM)"
       :disabled="!category3Id">添加SPU</el-button>
 
-    <el-table :data="spuList" border stripe size="default" style="margin-bottom: 20px;">
+    <el-table :data="spuList" border stripe size="default" style="margin-bottom: 20px;" v-loading="isSkuLoading">
       <el-table-column type="index" width="100" align="center"></el-table-column>
       <el-table-column label="SPU名称" prop="spuName"></el-table-column>
       <el-table-column label="SPU描述" prop="description"></el-table-column>
@@ -71,7 +71,8 @@ const skuList = ref<skuListType[]>([])
 const showSpuInfo = ref<spuListType | null>(null)
 // 是否显示dialog
 const isShowDialog = computed(() => !!showSpuInfo.value)
-
+// sku的数据请求状态
+const isSkuLoading = ref(false);
 
 // 获取spu列表
 async function getSPUList() {
@@ -95,8 +96,14 @@ async function getSPUList() {
 async function getSkuList(row: spuListType) {
   showSpuInfo.value = row;
   try {
+    // 设置请求状态loading为true
+    isSkuLoading.value = true;
     skuList.value = await reqSkuList(row.id)
-  } catch (e) { }
+
+  } catch (e) { } finally {
+    // 无论请求成功还是失败，只要请求完成，改变loading状态
+    isSkuLoading.value = false;
+  }
 }
 
 // 关闭对话框的事件函数
@@ -105,11 +112,11 @@ function closeSkuDialog() {
 }
 
 async function deleteSpu(row: spuListType) {
-  try{
+  try {
     await reqDeleteSpu(row.id)
     getSPUList()
     ElMessage.success('删除成功')
-  }catch (e) {
+  } catch (e) {
     ElMessage.error('删除失败')
   }
 

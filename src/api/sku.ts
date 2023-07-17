@@ -4,7 +4,9 @@ import  type {Page} from './page'
 enum URLS  {
     SKU_INFO = '/product/saveSkuInfo',
     SKU_LIST_BY_SPUID='/product/findBySpuId',
-    SKU_INFO_LIST='/product/list'
+    SKU_INFO_LIST='/product/list',
+    SKU_TOP='/product/onSale',
+    SKU_BOTTOM='/product/cancelSale'
 }
 
 export interface addSaveSkuInfo{
@@ -118,4 +120,14 @@ export function reqSkuList(spuId:number){
 // 获取所有sku列表
 export function reqSkuInfoList(page=1,limit=5){
     return request.get<any,Page<skuListType[]>>(`${URLS.SKU_INFO_LIST}/${page}/${limit}`)
+}
+
+// 上架
+export function reqSkuTop(id:number){
+    return request.get<any,number>(`${URLS.SKU_TOP}/${id}`)
+}
+
+// 下架
+export function reqSkuBottom(id:number){
+    return request.get<any,number>(`${URLS.SKU_BOTTOM}/${id}`)
 }

@@ -25,30 +25,30 @@
       <el-pagination :total="total" :current-page="page" :page-size="limit" :page-sizes="[5, 10, 15, 20]"
         @current-change="pageChangeHandler" @size-change="limitChangeHandler"
         layout="prev,pager,next,jumper,->,sizes,total"></el-pagination>
-      <el-drawer v-model="isShowSkuDrawer" :title="skuById?.skuName" @close="closeDrawer" style="width: 500px;">
+      <el-drawer v-if="skuById" v-model="isShowSkuDrawer" :title="skuById.skuName" @close="closeDrawer">
         <el-row >
           <el-col class="title" :span="6">名称</el-col>
-          <el-col class="content" :span="16">{{ skuById?.skuName }}</el-col>
+          <el-col class="content" :span="16">{{ skuById.skuName }}</el-col>
         </el-row>
         <el-row>
           <el-col class="title" :span="6">描述</el-col>
-          <el-col class="content"  :span="16">{{ skuById?.skuDesc }}</el-col>
+          <el-col class="content"  :span="16">{{ skuById.skuDesc }}</el-col>
         </el-row>
         <el-row>
           <el-col class="title" :span="6">价格</el-col>
-          <el-col class="content" :span="16">{{ skuById?.price }}</el-col>
+          <el-col class="content" :span="16">{{ skuById.price }}</el-col>
         </el-row>
         <el-row>
           <el-col class="title" :span="6">平台属性</el-col>
           <el-col class="content" :span="16">
-            <el-tag type="success" v-for="item in skuById?.skuAttrValueList" :key="item.id">{{ item.attrName }}-{{ item.valueName
+            <el-tag type="success" v-for="item in skuById.skuAttrValueList" :key="item.id">{{ item.attrName }}-{{ item.valueName
             }}</el-tag>
           </el-col>
         </el-row>
         <el-row>
           <el-col class="title" :span="6">销售属性</el-col>
           <el-col class="content" :span="16">
-            <el-tag type="success" v-for="item in skuById?.skuSaleAttrValueList" :key="item.id">{{ item.saleAttrName }}-{{
+            <el-tag type="success" v-for="item in skuById.skuSaleAttrValueList" :key="item.id">{{ item.saleAttrName }}-{{
               item.saleAttrValueName }}</el-tag>
           </el-col>
         </el-row>
@@ -56,7 +56,7 @@
           <el-col class="title" :span="6">商品图片</el-col>
           <el-col class="content" :span="16">
             <el-carousel indicator-position="outside">
-              <el-carousel-item v-for="item in skuById?.skuImageList" :key="item.id">
+              <el-carousel-item v-for="item in skuById.skuImageList" :key="item.id">
                 <img :src="item.imgUrl" style="width: 100%;height: 100%;" alt="">
               </el-carousel-item>
             </el-carousel>

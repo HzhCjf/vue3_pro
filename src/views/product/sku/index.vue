@@ -149,5 +149,6 @@ function closeDrawer() {
 .content{
   font-size: 18px;
   margin-bottom: 20px;
+  padding-top: 8px;
 }
 </style>

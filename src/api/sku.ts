@@ -6,7 +6,9 @@ enum URLS  {
     SKU_LIST_BY_SPUID='/product/findBySpuId',
     SKU_INFO_LIST='/product/list',
     SKU_TOP='/product/onSale',
-    SKU_BOTTOM='/product/cancelSale'
+    SKU_BOTTOM='/product/cancelSale',
+    SKU_BY_ID='/product/getSkuById',
+    DELETE_BY_ID='/product/deleteSku'
 }
 
 export interface addSaveSkuInfo{
@@ -107,6 +109,25 @@ export interface skuListType{
     weight: string;
 }
 
+// 指定id的sku列表类型
+export interface skuByIdType extends skuListType{
+    skuImageList:skuImageListType[],
+    skuAttrValueList:skuAttrValueListType &{
+        id:number,
+        skuId:number,
+        attrName:string,
+        valueName:string
+    }[],
+    skuSaleAttrValueList:skuSaleAttrValueListType &{
+        id:number,
+        skuId:number,
+        spuId:number,
+        saleAttrName:string,
+        saleAttrValueName:string
+    }[]
+
+}
+
 // 添加sku
 export function reqSaveSkuInfo(data:addSaveSkuInfo){
     return request.post(URLS.SKU_INFO,data)
@@ -130,4 +151,14 @@ export function reqSkuTop(id:number){
 // 下架
 export function reqSkuBottom(id:number){
     return request.get<any,number>(`${URLS.SKU_BOTTOM}/${id}`)
+}
+
+// 请求指定id的sku列表
+export function reqSkuById(skuId:number){
+    return request.get<any,skuByIdType>(`${URLS.SKU_BY_ID}/${skuId}`)
+}
+
+// 删除指定的sku
+export function deleteByIdSku(skuId:number){
+    return request.delete<any,null>(`${URLS.DELETE_BY_ID}/${skuId}`)
 }

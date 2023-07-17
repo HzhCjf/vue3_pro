@@ -1,4 +1,4 @@
-import requst from '@/utils/request'
+import request from '@/utils/request'
 import type { Page } from './page'
 
 enum URLS {
@@ -7,7 +7,8 @@ enum URLS {
     SALEATTRLIST = '/product/baseSaleAttrList',
     UPDATE_IMAGE_LIST='/product/spuImageList',
     UPDATE_SALE_ATTR_LIST='/product/spuSaleAttrList',
-    UPDATE_SPU_INFO='/product/updateSpuInfo'
+    UPDATE_SPU_INFO='/product/updateSpuInfo',
+    DELETE_SPU = '/product/deleteSpu'
 }
 
 // spu列表的类型
@@ -111,31 +112,35 @@ export interface updateSpuImageList{
 
 // 请求spu列表
 export function reqSPUList(category3Id:number,page=1,limit=5){
-    return requst.get<any,Page<spuListType[]>>(`${URLS.GET_SPU_LIST}/${page}/${limit}`,{params:{category3Id}})
+    return request.get<any,Page<spuListType[]>>(`${URLS.GET_SPU_LIST}/${page}/${limit}`,{params:{category3Id}})
 }
 
 // 添加spu
 export function reqSPUInfoType(data:addSPUType){
-    return requst.post<any,null>(URLS.ADD_SPU,data)
+    return request.post<any,null>(URLS.ADD_SPU,data)
 }
 
 // 获取基础销售属性列表
 export function reqSaleAttrList(){
-    return requst.get<any,saleAttrListType[]>(URLS.SALEATTRLIST)
+    return request.get<any,saleAttrListType[]>(URLS.SALEATTRLIST)
 }
 
 
 // 获取图片列表
 export function reqUpdateImageList(id:number){
-    return requst.get<any,updateSpuImageList[]>(`${URLS.UPDATE_IMAGE_LIST}/${id}`)
+    return request.get<any,updateSpuImageList[]>(`${URLS.UPDATE_IMAGE_LIST}/${id}`)
 }
 
 // 获取销售属性列表
 export function reqUpdateSaleAttrList(id:number){
-    return requst.get<any,updateSpuSaleAttrListType[]>(`${URLS.UPDATE_SALE_ATTR_LIST}/${id}`)
+    return request.get<any,updateSpuSaleAttrListType[]>(`${URLS.UPDATE_SALE_ATTR_LIST}/${id}`)
 }
 
 // 修改SPU列表
 export function reqUpdateAttrInfo(data:updateSpuInfoType){
-    return requst.post<any,null>(URLS.UPDATE_SPU_INFO,data)
+    return request.post<any,null>(URLS.UPDATE_SPU_INFO,data)
+}
+
+export function reqDeleteSpu(id:number){
+    return request.delete<any,null>(`${URLS.DELETE_SPU}/${id}`)
 }

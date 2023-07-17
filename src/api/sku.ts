@@ -4,7 +4,10 @@ import  type {Page} from './page'
 enum URLS  {
     SKU_INFO = '/product/saveSkuInfo',
     SKU_LIST_BY_SPUID='/product/findBySpuId',
-    SKU_INFO_LIST='/product/list'
+    SKU_INFO_LIST='/product/list',
+    SKU_TOP='/product/onSale',
+    SKU_BOTTOM='/product/cancelSale',
+    SKU_BY_ID = '/product/getSkuById'
 }
 
 export interface addSaveSkuInfo{
@@ -105,6 +108,24 @@ export interface skuListType{
     weight: string;
 }
 
+// 获取指定id的类型
+export interface skuByIdType extends skuListType{
+    skuImageList:skuImageListType[],
+    skuAttrValueList:skuAttrValueListType &{
+        id:number,
+        skuId:number,
+        attrName:string,
+        valueName:string
+    }[],
+    skuSaleAttrValueList:skuSaleAttrValueListType &{
+        id:number,
+        skuId:number,
+        spuId:number,
+        saleAttrName:string,
+        saleAttrValueName:string
+    }[]
+}
+
 // 添加sku
 export function reqSaveSkuInfo(data:addSaveSkuInfo){
     return request.post(URLS.SKU_INFO,data)
@@ -118,4 +139,18 @@ export function reqSkuList(spuId:number){
 // 获取所有sku列表
 export function reqSkuInfoList(page=1,limit=5){
     return request.get<any,Page<skuListType[]>>(`${URLS.SKU_INFO_LIST}/${page}/${limit}`)
+}
+
+// 上架
+export function reqTopSale(id:number){
+    return request.get<any,null>(`${URLS.SKU_TOP}/${id}`)
+}
+// 下架
+export function reqBottomSale(id:number){
+    return request.get<any,null>(`${URLS.SKU_BOTTOM}/${id}`)
+}
+
+// 请求指定id的sku
+export function reqSkuById(skuId:number){
+    return request.get<any,skuByIdType>(`${URLS.SKU_BY_ID}/${skuId}`)
 }

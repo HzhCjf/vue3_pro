@@ -18,7 +18,7 @@
             <el-button v-else type="success" icon="ele-Bottom" @click="bottomSale(row)"></el-button>
             <el-button type="primary" icon="ele-Edit"></el-button>
             <el-button type="info" icon="ele-InfoFilled" @click="showSkuDrawer(row)"></el-button>
-            <el-button type="danger" icon="ele-Delete"></el-button>
+            <el-button type="danger" icon="ele-Delete" @click="deleteSku(row)"></el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -69,13 +69,14 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+import { ElMessage } from 'element-plus'
 export default defineComponent({
   name: 'ProductSKUList'
 })
 </script>
 <script lang="ts" setup>
 import { ref, computed } from 'vue'
-import { reqSkuInfoList, reqTopSale, reqBottomSale, reqSkuById } from '@/api/sku'
+import { reqSkuInfoList, reqTopSale, reqBottomSale, reqSkuById,reqDeleteSku } from '@/api/sku'
 import type { skuListType, skuByIdType } from '@/api/sku'
 import usePagination from '@/hooks/usePagination'
 
@@ -132,6 +133,17 @@ async function showSkuDrawer(row: skuListType) {
 // 关闭抽屉的事件函数
 function closeDrawer() {
   showSkus.value = null
+}
+
+// 删除指定的sku
+async function deleteSku(row:skuListType){
+  try{
+    await reqDeleteSku(row.id)
+    getSkuListInfo()
+    ElMessage.success('删除成功')
+  }catch(e){
+    ElMessage.success('删除失败')
+  }
 }
 </script>
 

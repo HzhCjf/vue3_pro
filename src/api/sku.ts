@@ -7,7 +7,8 @@ enum URLS  {
     SKU_INFO_LIST='/product/list',
     SKU_TOP='/product/onSale',
     SKU_BOTTOM='/product/cancelSale',
-    SKU_BY_ID = '/product/getSkuById'
+    SKU_BY_ID = '/product/getSkuById',
+    DELETE_BY_ID='/product/deleteSku'
 }
 
 export interface addSaveSkuInfo{
@@ -153,4 +154,9 @@ export function reqBottomSale(id:number){
 // 请求指定id的sku
 export function reqSkuById(skuId:number){
     return request.get<any,skuByIdType>(`${URLS.SKU_BY_ID}/${skuId}`)
+}
+
+// 删除指定的sku
+export function reqDeleteSku(skuId:number){
+    return request.delete<any,null>(`${URLS.DELETE_BY_ID}/${skuId}`)
 }

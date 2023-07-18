@@ -144,10 +144,11 @@ async function deleteSku(row:skuListType){
   }catch(e){
     ElMessage.success('删除失败')
   }
+  
 }
 </script>
 
-<style scoped>
+<style lang="less" scoped>
 .title{
   font-weight: 900;
   font-size: 25px;

@@ -36,7 +36,12 @@ router.beforeEach(async (to, from, next) => {
       const hasLogin = !!userInfoStore.name
       // 如果已经登陆直接放行
       if (hasLogin) {
-        next()
+        if(to.name){
+          next()
+        }else{
+          next('/')
+        }
+        
       } else { // 如果还没有登陆
         try {
           // 异步请求获取用户信息(包含权限数据) ==> 动态注册用户的权限路由 => 当次跳转不可见

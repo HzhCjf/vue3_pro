@@ -142,7 +142,7 @@ async function deleteSku(row:skuListType){
     getSkuListInfo()
     ElMessage.success('删除成功')
   }catch(e){
-    ElMessage.success('删除失败')
+    ElMessage.error('删除失败')
   }
   
 }

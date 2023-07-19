@@ -17,7 +17,7 @@ import router from './router'
 import './styles/index.scss'
 
 // 加载鉴权逻辑，注册 beforeEach 函数，不会现在执行
-// import './permission'
+import './permission'
 
 const app = createApp(App)
 
